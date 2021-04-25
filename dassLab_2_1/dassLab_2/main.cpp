@@ -9,6 +9,7 @@ void input(size_t &driverNum, size_t &passengerNum, size_t &transportNum) {
     cin >> driverNum;
 }
 
+// further it is better to use the templates
 vector<DriverBus *> createDrivers(Director *director, BuilderDriverBus *b_driver, size_t driverNum) {
     vector<DriverBus *> drivers;
     
@@ -75,6 +76,50 @@ vector<Taxi *> createTaxi(Director *director, BuilderTaxi *b_transport, size_t t
     return taxi;
 }
 
+void checkState(vector<Bus *> buses) {
+    int a = 0;
+    for (int i = 0; i < buses.size(); i++) {
+        if (buses.at(a)->passengers.size() == 30 && buses.at(a)->driver != NULL) {
+            cout << "The bus #" << buses.at(a)->number << " departs.\n";
+            buses.erase(buses.begin() + a);
+        }
+
+        if (!buses.at(a)->driver) {
+            if (buses.at(a)->passengers.size() < 30)
+                cout << "The bus #" << buses.at(a)->number << " is waiting for passengers (" << (buses.at(a)->seats - buses.at(a)->passengers.size()) << " seats are available).\n";
+            cout << "The bus #" << buses.at(a)->number << "is waiting for driver.\n";
+            a++;
+        }
+        if (buses.at(a)->passengers.size() < 30) {
+            cout << "The bus #" << buses.at(a)->number << " is waiting for passengers (" << (buses.at(a)->seats - buses.at(a)->passengers.size()) << " seats are available).\n";
+            a++;
+        }
+    }
+}
+
+void checkState(vector<Taxi *> taxies) {
+    int a = 0;
+    for (int i = 0; i < taxies.size(); i++) {
+        if (taxies.at(a)->passengers.size() == 4 && taxies.at(a)->driver != NULL) {
+            cout << "The taxi #" << taxies.at(a)->number << " departs.\n";
+            taxies.erase(taxies.begin() + a);
+        }
+
+        if (!taxies.at(a)->driver) {
+            if (taxies.at(a)->passengers.size() < 4)
+                cout << "The taxi #" << taxies.at(a)->number << " is waiting for passengers (" << (taxies.at(a)->seats - taxies.at(a)->passengers.size()) << " seats are available).\n";
+            cout << "The taxi #" << taxies.at(a)->number << " is waiting for driver.\n";
+            a++;
+        }
+        if (taxies.at(a)->passengers.size() < 4) {
+            cout << "The taxi #" << taxies.at(a)->number << " is waiting for passengers (" << (taxies.at(a)->seats - taxies.at(a)->passengers.size()) << " seats are available).\n";
+            if (!taxies.at(a)->driver)
+                cout << "The taxi #" << taxies.at(a)->number << " is waiting for driver.\n";
+            a++;
+        }
+    }
+}
+
 int main() {
     // added director
     Director *director = new Director;
@@ -114,37 +159,46 @@ int main() {
                 driversOnBuses.erase(driversOnBuses.begin());
             }
     
-    // TODO: read function void checkState(vector<Bus *> buses);
+    // check state buses
+    checkState(buses);
+
+    // added builders
+    BuilderDriverTaxi *driver_taxi_builder = new BuilderDriverTaxi;
+    BuilderPassengerTaxi *pass_taxi_builder = new BuilderPassengerTaxi;
+    BuilderTaxi *taxi = new BuilderTaxi;
+
+    // install builders on director
+    director->changeBuilderDriver(driver_taxi_builder);
+    director->changeBuilderPassenger(pass_taxi_builder);
+    director->changeBuilderTransport(taxi);
+
+    // enter data
+    cout << "\n#TAXI#\n";
+    input(driversOnNum, passOnNum, Num);
+
+    // create data vectors
+    vector<DriverTaxi *> driversOnTaxies = createDrivers(director, driver_taxi_builder, driversOnNum);
+    vector<PassengerTaxi *> passOnTaxies = createPassengers(director, pass_taxi_builder, passOnNum);
+    vector<Taxi *> taxies = createTaxi(director, taxi, Num);
+
+    // added passengers in transport
+    for (auto taxi : taxies)
+        for (auto passenger : passOnTaxies)
+            if (taxi->passengers.size() < 4) {
+                taxi->passengers.push_back(passenger);
+                passOnTaxies.erase(passOnTaxies.begin());
+            }
+
+    // added drivers in transport
+    for (auto taxi : taxies)
+        for (auto driver : driversOnTaxies)
+            if (taxi->driver == NULL) {
+                taxi->driver = driver;
+                driversOnTaxies.erase(driversOnTaxies.begin());
+            }
+
+    // check state buses
+    checkState(taxies);
     
     return 0;
 }
-
-/*director->makeDriver(driver_builder);
-director->makePassenger(pass_builder);
-vector<Passenger *> passengers = { pass_builder->getResult() };
-director->makeTransport(bus, driver_builder->getResult(), passengers);
-
-bus->getResult()->info();
-bus->getResult()->driver->info();
-for (auto passenger : bus->getResult()->passengers)
-    passenger->info();
-cout << endl;
-
-BuilderDriverTaxi *driver_taxi_builder = new BuilderDriverTaxi;
-BuilderPassengerTaxi *pass_taxi_builder = new BuilderPassengerTaxi;
-BuilderTaxi *taxi = new BuilderTaxi;
-
-director->changeBuilderDriver(driver_taxi_builder);
-director->changeBuilderPassenger(pass_taxi_builder);
-director->changeBuilderTransport(taxi);
-
-director->makeDriver(driver_taxi_builder);
-director->makePassenger(pass_taxi_builder);
-vector<Passenger *> passengers_taxi = { pass_taxi_builder->getResult() };
-director->makeTransport(taxi, driver_taxi_builder->getResult(), passengers_taxi);
-
-taxi->getResult()->info();
-taxi->getResult()->driver->info();
-for (auto passenger : taxi->getResult()->passengers)
-    passenger->info();
-cout << endl;*/
