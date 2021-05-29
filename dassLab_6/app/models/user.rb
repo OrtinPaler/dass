@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+# model user class
+class User < ApplicationRecord
+  before_save { self.email = email.downcase }
+  validates :name, presence: true, length: { maximum: 50 }
+  VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.freeze
+  validates :email, presence: true, length: { maximum: 255 },
+                    format: { with: VALID_EMAIL_REGEX },
+                    uniqueness: { case_sensitive: false }
+  has_secure_password
+  validates :password, length: { minimum: 6 }
+end
+
+class ModelController < ApplicationController
+  before_filter :find_model
+  private
+  def find_model
+    @model = Model.find(params[:id]) if params[:id]
+  end
+end

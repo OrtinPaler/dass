@@ -1,0 +1,188 @@
+// mixins, variables, etc.
+$light_gray: #777;
+$f1_red: #0069d9;
+
+@mixin box_sizing {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+// general
+body {
+  padding-top: 5px;
+}
+
+section {
+  overflow: auto;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.center {
+  text-align: center;
+  h1 {
+    margin-bottom: 10px;
+  }
+}
+
+// rules for text
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1;
+}
+
+h1 {
+  font-size: 3em;
+  letter-spacing: -2px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.2em;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: $light_gray;
+}
+
+p {
+  font-size: 1.1em;
+  line-height: 1.7em;
+}
+
+// logo
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: #000;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+  &:hover {
+    color: #0068dc;
+    text-decoration: none;
+  }
+}
+
+// footer
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid #eaeaea;
+  color: $light_gray;
+  a {
+    color: #555;
+    &:hover {
+      color: #222;
+    }
+  }
+  small {
+    float: left;
+  }
+  ul {
+    float: right;
+    list-style: none;
+    li {
+      float: left;
+      margin-left: 15px;
+    }
+  }
+}
+
+/* боковая панель */
+aside {
+  section.user_info {
+    margin-top: 20px;
+    &:first-child {
+      border: 0;
+      padding-top: 0;
+    }
+    span {
+      display: block;
+      margin-bottom: 3px;
+      line-height: 1;
+    }
+    h1 {
+      font-size: 1.4em;
+      text-align: left;
+      letter-spacing: -1px;
+      margin-bottom: 3px;
+      margin-top: 0;
+    }
+  }
+}
+
+.gravatar {
+  float: left;
+  margin-right: 10px;
+}
+
+.gravatar_edit {
+  margin-top: 15px;
+}
+
+/* формы */
+input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+input {
+  height: auto !important;
+}
+
+div.mine {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* разное */
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}
+
+/* боковая панель  */
+aside {
+  section.user_info {
+    margin-top: 20px; // устанавливает величину отступа от верхнего края элемента
+  }
+  section {
+    padding: 10px 0; // устанавливает величину отступа от верхнего края элемента
+    margin-top: 20px; // устанавливает величину отступа от верхнего края элемента
+    &:first-child {
+      border: 0; // позволяет одновременно установить толщину, стиль и цвет границы вокруг элемента
+      padding-top: 0; // устанавливает значение поля от верхнего края содержимого элемента
+    }
+    span {
+      display: block; // многоцелевое свойство, которое определяет, как элемент должен быть показан в документе
+      margin-bottom: 3px; // устанавливает величину отступа от нижнего края элемента
+      line-height: 1; // устанавливает интерлиньяж (межстрочный интервал) текста, отсчет ведется от базовой линии шрифта
+    }
+    h1 {
+      font-size: 1.4em;
+      text-align: left; // определяет горизонтальное выравнивание текста в пределах элемента
+      letter-spacing: -1px; // определяет интервал между символами в пределах элемента
+      margin-bottom: 3px;
+      margin-top: 0;
+    }
+  }
+}
+
+.gravatar {
+  float: left;
+  margin-right: 10px;
+}
+
+.gravatar_edit {
+  margin-top: 15px;
+}
